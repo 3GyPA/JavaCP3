@@ -2,7 +2,15 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
- * Клас для представлення інформації про одяг.
+ * Represents a piece of clothing with various properties.
+ *
+ * <p>This class encapsulates the details of a clothing item, including
+ * its type, brand, price, size, and color. It provides methods for
+ * accessing these details, comparing clothing objects, and formatting
+ * them for display.</p>
+ *
+ * <p><strong>Note:</strong> This implementation assumes all input values
+ * are valid and does not perform extensive validation.</p>
  */
 class Clothing {
     private String type;
@@ -12,15 +20,23 @@ class Clothing {
     private String color;
 
     /**
-     * Конструктор класу Clothing.
+     * Створює об'єкт Clothing із заданими властивостями.
      *
-     * @param type  Тип одягу (наприклад, сорочка, штани).
-     * @param brand Бренд одягу.
-     * @param price Ціна одягу.
-     * @param size  Розмір одягу.
-     * @param color Колір одягу.
+     * @param type тип одягу (наприклад, «Сорочка», «Штани»).
+     * @param brand - бренд одягу.
+     * @param price ціна одягу в доларах США.
+     * @param size розмір одягу (наприклад, «M», «L»).
+     * @param color колір одягу.
+     * @throws NullPointerException, якщо будь-який з рядкових параметрів дорівнює нулю.
+     * @throws IllegalArgumentException, якщо ціна від'ємна.
      */
     public Clothing(String type, String brand, double price, String size, String color) {
+        if (type == null || brand == null || size == null || color == null) {
+            throw new NullPointerException("Parameters cannot be null");
+        }
+        if (price < 0) {
+            throw new IllegalArgumentException("Price cannot be negative");
+        }
         this.type = type;
         this.brand = brand;
         this.price = price;
@@ -28,28 +44,50 @@ class Clothing {
         this.color = color;
     }
 
-    // Геттери для доступу до полів
+    /**
+     * Повертає тип одягу.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Повертає бренд одягу.
+     */
     public String getBrand() {
         return brand;
     }
 
+    /**
+     * Повертає ціну одежі.
+     */
     public double getPrice() {
         return price;
     }
 
+    /**
+     * Повертає розміри одягу.
+     */
     public String getSize() {
         return size;
     }
 
+    /**
+     * Повертає колір одягу.
+     */
     public String getColor() {
         return color;
     }
 
-    // Метод для порівняння двох об'єктів Clothing
+    /**
+     * Порівнює цей об'єкт одягу із заданим об'єктом.
+     *
+     <p>Два об'єкти одягу вважаються рівними, якщо всі їхні властивості
+     * ( type, brand, price, size, and color ) є однаковими.</p>
+     *
+     * @param obj об'єкт для порівняння.
+     * @return true, якщо об'єкти рівні; false у протилежному випадку.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -62,6 +100,11 @@ class Clothing {
                 color.equals(clothing.color);
     }
 
+    /**
+     * Повертає рядкове представлення об'єкту одягу.
+     *
+     * @return відформатований рядок, що описує одяг.
+     */
     @Override
     public String toString() {
         return "Clothing{" +
@@ -75,62 +118,60 @@ class Clothing {
 }
 
 /**
- * Клас Main для демонстрації роботи з масивом об'єктів класу Clothing.
+ * Демонструє використання класу Clothing та операції над масивами об'єктів Clothing.
+ *
+ * <p>Цей клас містить головний метод, який створює масив об'єктів класу Clothing,
+ * сортує масив за певними критеріями та здійснює пошук певного об'єкту в масиві.</p>
+ *
+ * <p>Sorting criteria:</p>
+ * <ul>
+ * <li>Price (ascending).</li>
+ * <li>Brand (descending).</li>
+ * </ul>
+ *
+ * <p><strong>Note:</strong> Метод main також обробляє потенційні винятки під час виконання.</p>
  */
 public class Main {
 
     public static void main(String[] args) {
-        // Ініціалізація масиву об'єктів класу Clothing
-        Clothing[] clothingArray = {
-                new Clothing("Shirt", "Nike", 49.99, "M", "Blue"),
-                new Clothing("Pants", "Adidas", 79.99, "L", "Black"),
-                new Clothing("Jacket", "Puma", 120.0, "XL", "Green"),
-                new Clothing("T-shirt", "Reebok", 29.99, "S", "White"),
-                new Clothing("Shoes", "Nike", 99.99, "42", "Red")
-        };
+        try {
+            Clothing[] clothingArray = {
+                    new Clothing("Shirt", "Nike", 49.99, "M", "Blue"),
+                    new Clothing("Pants", "Adidas", 79.99, "L", "Black"),
+                    new Clothing("Jacket", "Puma", 120.0, "XL", "Green"),
+                    new Clothing("T-shirt", "Reebok", 29.99, "S", "White"),
+                    new Clothing("Shoes", "Nike", 99.99, "42", "Red")
+            };
 
-        // Виведення початкового масиву
-        System.out.println("Original array:");
-        printArray(clothingArray);
+            System.out.println("Original array:");
+            printArray(clothingArray);
 
-        // Сортування за ціною за зростанням, а за брендом за спаданням
-        Arrays.sort(clothingArray, Comparator
-                .comparingDouble(Clothing::getPrice) // Сортування за ціною
-                .thenComparing(Comparator.comparing(Clothing::getBrand).reversed())); // Сортування за брендом
+            Arrays.sort(clothingArray, Comparator
+                    .comparingDouble(Clothing::getPrice)
+                    .thenComparing(Comparator.comparing(Clothing::getBrand).reversed()));
 
-        System.out.println("\nSorted array (price ascending, brand descending):");
-        printArray(clothingArray);
+            System.out.println("\nSorted array (price ascending, brand descending):");
+            printArray(clothingArray);
 
-        // Заданий об'єкт для пошуку
-        Clothing target = new Clothing("Pants", "Adidas", 79.99, "L", "Black");
+            Clothing target = new Clothing("Pants", "Adidas", 79.99, "L", "Black");
+            int index = findClothing(clothingArray, target);
 
-        // Пошук об'єкта в масиві
-        int index = findClothing(clothingArray, target);
-        if (index != -1) {
-            System.out.println("\nFound matching clothing: " + clothingArray[index]);
-        } else {
-            System.out.println("\nNo matching clothing found.");
+            if (index != -1) {
+                System.out.println("\nFound matching clothing: " + clothingArray[index]);
+            } else {
+                System.out.println("\nNo matching clothing found.");
+            }
+        } catch (Exception e) {
+            System.err.println("An error occurred: " + e.getMessage());
         }
     }
 
-    /**
-     * Виведення масиву об'єктів Clothing.
-     *
-     * @param array Масив для виведення.
-     */
     private static void printArray(Clothing[] array) {
         for (Clothing clothing : array) {
             System.out.println(clothing);
         }
     }
 
-    /**
-     * Пошук об'єкта Clothing у масиві.
-     *
-     * @param array Масив для пошуку.
-     * @param target Заданий об'єкт для пошуку.
-     * @return Індекс знайденого об'єкта або -1, якщо об'єкт не знайдено.
-     */
     private static int findClothing(Clothing[] array, Clothing target) {
         for (int i = 0; i < array.length; i++) {
             if (array[i].equals(target)) {
